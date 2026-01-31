@@ -19,7 +19,7 @@ cd <ProjectName>
 npm install
 ```
 
-4. Create a new .env file in the root directory and add code
+4. Create a new .env file in the root directory and add PORT
 
 ```
 echo PORT=3001 >> .env
