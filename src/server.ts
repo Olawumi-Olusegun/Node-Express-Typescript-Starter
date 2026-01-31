@@ -1,14 +1,24 @@
 import express, { type Express } from 'express';
+import { serverConfig } from './config/index';
+import apiRoutes from './routes';
+import { appErrorHandler, errorHandler } from './middlewares/error.middleware';
+import { logger } from './config/logger';
+import { attachCorrelationMiddleware } from './middlewares/correlation.middleware';
 
 const app: Express = express();
 
-app.get('/', (_req, res) => {
-  res.send('Hello, World!');
-});
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.use(attachCorrelationMiddleware);
+app.use('/api', apiRoutes);
+
+app.use(appErrorHandler);
+app.use(errorHandler);
+
+app.listen(serverConfig.PORT, () => {
+  console.log(`Server is running on port ${serverConfig.PORT}`);
+  logger.info(`Server started on port ${serverConfig.PORT}`); 
 });
 
 export default app;
